@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="images">
+    <file>avataaars.png</file>
+    <file>BeckhamReets.png</file>
+    <file>DariusBecks.png</file>
+    <file>IanMortez.png</file>
+    <file>KateLanches.png</file>
+    <file>RamiroFlorez.png</file>
+    <file>SarahManse.png</file>
+  </qresource>
+</RCC>
