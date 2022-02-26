@@ -59,7 +59,7 @@ class Ui_MainWindow(object):
 
 
         font = QtGui.QFont()
-        font.setPointSize(24)
+        font.setPointSize(20)
         self.plainTextEdit.setFont(font)
         self.plainTextEdit.setObjectName("plainTextEdit")
         self.plainTextEdit_2 = QtWidgets.QPlainTextEdit(self.centralwidget)
