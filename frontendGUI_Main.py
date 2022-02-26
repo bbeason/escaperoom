@@ -87,7 +87,7 @@ class Ui_MainWindow(object):
         self.pushButton_3.setObjectName("pushButton_3")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1728, 37))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1728, 21))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -108,7 +108,7 @@ class Ui_MainWindow(object):
 ""))
         self.pushButton.setText(_translate("MainWindow", "See Suspects"))
         self.pushButton_3.setText(_translate("MainWindow", "Need Clue"))
-import escaperoom_rc
+import escaperoom
 
 
 if __name__ == "__main__":
