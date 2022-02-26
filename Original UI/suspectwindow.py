@@ -63,4 +63,4 @@ class Ui_SuspectWindow(object):
     def retranslateUi(self, SuspectWindow):
         _translate = QtCore.QCoreApplication.translate
         SuspectWindow.setWindowTitle(_translate("SuspectWindow", "MainWindow"))
-import suspect
+import suspect_rc

@@ -12,9 +12,57 @@ import threading
 import socket
 import dotenv
 
-
+from suspectwindow import Ui_SuspectWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
+PORT = 5050
+SERVER = "localhost"
+ADDR = (SERVER, PORT)
+FORMAT = "utf-8"
+DISCONNECT_MESSAGE = "!DISCONNECT"
 
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(ADDR)
+
+clients = set()
+clients_lock = threading.Lock()
+class Messenger():
+    def __init__(self):
+        pass
+
+    def handle_client(self, conn, addr):
+        print(f"[NEW CONNECTION] {addr} Connected")
+
+        try:
+            connected = True
+            while connected:
+                msg = conn.recv(1024).decode(FORMAT)
+                if not msg:
+                    break
+
+                if msg == DISCONNECT_MESSAGE:
+                    connected = False
+
+                print(f"[{addr}] {msg}")
+                with clients_lock:
+                    for c in clients:
+                        c.sendall(f"[{addr}] {msg}".encode(FORMAT))
+
+        finally:
+            with clients_lock:
+                clients.remove(conn)
+
+            conn.close()
+
+
+    def start(self):
+        print('[SERVER STARTED]!')
+        server.listen()
+        while True:
+            conn, addr = server.accept()
+            with clients_lock:
+                clients.add(conn)
+            thread = threading.Thread(target=self.handle_client, args=(conn, addr))
+            thread.start()
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -92,6 +140,8 @@ class Ui_MainWindow(object):
         font.setPointSize(36)
         self.pushButton_3.setFont(font)
         self.pushButton_3.setObjectName("pushButton_3")
+        self.pushButton.clicked.connect(self.on_pushButton_clicked)
+        self.pushButton_3.clicked.connect(self.on_pushButton_clicked3)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1728, 21))
@@ -103,6 +153,22 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+
+
+    def on_pushButton_clicked(self):
+        print("show the suspects")
+        self.MainWindow = QtWidgets.QMainWindow()
+        self.ui = Ui_SuspectWindow()
+        self.ui.setupUi(self.MainWindow)
+        self.MainWindow.show()
+
+    def on_pushButton_clicked3(self):
+        print("ask for hint")
+        self.MainWindow = QtWidgets.QMainWindow()
+        self.ui = Ui_SuspectWindow()
+        self.ui.setupUi(self.MainWindow)
+        self.MainWindow.show()
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -121,57 +187,8 @@ class Ui_MainWindow(object):
 ""))
         self.pushButton.setText(_translate("MainWindow", "See Suspects"))
         self.pushButton_3.setText(_translate("MainWindow", "Need Clue"))
+        
 
-PORT = 5050
-SERVER = "localhost"
-ADDR = (SERVER, PORT)
-FORMAT = "utf-8"
-DISCONNECT_MESSAGE = "!DISCONNECT"
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(ADDR)
-
-clients = set()
-clients_lock = threading.Lock()
-
-
-def handle_client(conn, addr):
-    print(f"[NEW CONNECTION] {addr} Connected")
-
-    try:
-        connected = True
-        while connected:
-            msg = conn.recv(1024).decode(FORMAT)
-            if not msg:
-                break
-
-            if msg == DISCONNECT_MESSAGE:
-                connected = False
-
-            print(f"[{addr}] {msg}")
-            with clients_lock:
-                for c in clients:
-                    c.sendall(f"[{addr}] {msg}".encode(FORMAT))
-
-    finally:
-        with clients_lock:
-            clients.remove(conn)
-
-        conn.close()
-
-
-def start():
-    print('[SERVER STARTED]!')
-    server.listen()
-    while True:
-        conn, addr = server.accept()
-        with clients_lock:
-            clients.add(conn)
-        thread = threading.Thread(target=handle_client, args=(conn, addr))
-        thread.start()
-
-
-start()
 
 if __name__ == "__main__":
     import sys
@@ -181,3 +198,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
