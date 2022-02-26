@@ -56,6 +56,8 @@ class Ui_MainWindow(object):
         self.line_4.setObjectName("line_4")
         self.plainTextEdit = QtWidgets.QPlainTextEdit(self.centralwidget)
         self.plainTextEdit.setGeometry(QtCore.QRect(100, 90, 481, 751))
+
+
         font = QtGui.QFont()
         font.setPointSize(24)
         self.plainTextEdit.setFont(font)
@@ -102,7 +104,13 @@ class Ui_MainWindow(object):
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.label.setText(_translate("MainWindow", "Clues"))
         self.label_2.setText(_translate("MainWindow", "Story"))
-        self.plainTextEdit.setPlainText(_translate("MainWindow", "This is where the story text will go"))
+        # self.plainTextEdit.setPlainText(_translate("MainWindow", "This is where the story text will go"))
+        with open('story.txt') as f:
+            lines = f.readlines()
+            lines = str(lines[0])
+            self.plainTextEdit.setPlainText(lines)
+
+
         self.plainTextEdit_2.setPlainText(_translate("MainWindow", "This is where we will send clues. We will be able to send messages from any other computer and it will show up in this window here.\n"
 "\n"
 ""))
