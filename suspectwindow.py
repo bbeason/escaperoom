@@ -9,45 +9,79 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import *
+from PyQt5.QtWidgets import *
+from PyQt5.QtGui import *
+import time
+import sys
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from PyQt5 import QtCore
+from PyQt5 import QtGui
+from PyQt5 import QtWidgets
+from dotenv import load_dotenv
+import dotenv
+import os
+load_dotenv()  # take environment variables from .env.
+
+WINNER = os.environ.get("WINNER")
+print(WINNER) #TODO put the admin panel together to create the winner and the timer
 
 
 class Ui_SuspectWindow(object):
+    def __init__(self):
+
+        pass
     def setupUi(self, SuspectWindow):
         SuspectWindow.setObjectName("SuspectWindow")
         SuspectWindow.resize(1064, 833)
         SuspectWindow.setToolTipDuration(4)
         self.centralwidget = QtWidgets.QWidget(SuspectWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label = QtWidgets.QPushButton(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(9, 15, 351, 391))
         self.label.setStyleSheet("image: url(:/images/BeckhamReets.png);")
-        self.label.setText("")
+
+        # self.label.setText("")
         self.label.setObjectName("label")
-        self.label_2 = QtWidgets.QLabel(self.centralwidget)
+        self.label.clicked.connect(self.label_1_clicked)
+
+        self.label_2 = QtWidgets.QPushButton(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(10, 400, 351, 391))
         self.label_2.setStyleSheet("image: url(:/images/DariusBecks.png);")
         self.label_2.setText("")
         self.label_2.setObjectName("label_2")
-        self.label_3 = QtWidgets.QLabel(self.centralwidget)
+        self.label_2.clicked.connect(self.label_2_clicked)
+
+        self.label_3 = QtWidgets.QPushButton(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(380, 10, 351, 391))
         self.label_3.setStyleSheet("image: url(:/images/IanMortez.png);")
         self.label_3.setText("")
         self.label_3.setObjectName("label_3")
-        self.label_4 = QtWidgets.QLabel(self.centralwidget)
+        self.label_3.clicked.connect(self.label_3_clicked)
+
+        self.label_4 = QtWidgets.QPushButton(self.centralwidget)
         self.label_4.setGeometry(QtCore.QRect(740, 10, 351, 391))
         self.label_4.setStyleSheet("image: url(:/images/RamiroFlorez.png);")
         self.label_4.setText("")
         self.label_4.setObjectName("label_4")
-        self.label_5 = QtWidgets.QLabel(self.centralwidget)
+        self.label_4.clicked.connect(self.label_4_clicked)
+
+        self.label_5 = QtWidgets.QPushButton(self.centralwidget)
         self.label_5.setGeometry(QtCore.QRect(390, 400, 351, 391))
         self.label_5.setStyleSheet("image: url(:/images/SarahManse.png);")
         self.label_5.setText("")
         self.label_5.setObjectName("label_5")
-        self.label_6 = QtWidgets.QLabel(self.centralwidget)
+        self.label_5.clicked.connect(self.label_5_clicked)
+
+        self.label_6 = QtWidgets.QPushButton(self.centralwidget)
         self.label_6.setGeometry(QtCore.QRect(740, 400, 351, 391))
         self.label_6.setStyleSheet("image: url(:/images/KateLanches.png);")
         self.label_6.setText("")
         self.label_6.setObjectName("label_6")
+        self.label_6.clicked.connect(self.label_6_clicked)
+
         SuspectWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(SuspectWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1064, 37))
@@ -59,6 +93,37 @@ class Ui_SuspectWindow(object):
 
         self.retranslateUi(SuspectWindow)
         QtCore.QMetaObject.connectSlotsByName(SuspectWindow)
+    def label_1_clicked(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Suspect: BeckhamReet")
+        msg.setText('This is not the right Suspect')
+        msg.exec_()  # this will show our messagebox
+    def label_2_clicked(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Suspect: DariusBecks")
+        msg.setText("This is not the right Suspect")
+        msg.exec()
+    def label_3_clicked(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Suspect: IanMortez")
+        msg.setText("This is not the right Suspect")
+        msg.exec()
+    def label_4_clicked(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Suspect: RamiroFlorez")
+        msg.setText("This is not the right Suspect")
+        msg.exec()
+    def label_5_clicked(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Suspect: SarahManse")
+        msg.setText("This is not the right Suspect")
+        msg.exec()
+
+    def label_6_clicked(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Suspect: KateLanches")
+        msg.setText("This is not the right Suspect")
+        msg.exec()
 
     def retranslateUi(self, SuspectWindow):
         _translate = QtCore.QCoreApplication.translate

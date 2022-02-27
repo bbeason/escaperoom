@@ -18,6 +18,16 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLCDNumber
 from PyQt5.QtCore import QObject, QTime, QTimer, QThread, pyqtSignal
 import datetime
+from playsound import playsound
+import os
+from dotenv import load_dotenv
+
+load_dotenv()  # take environment variables from .env.
+
+TIMER = os.environ.get("TIMER")
+print(TIMER) #TODO put the admin panel together to create the winner and the timer
+
+
 
 class Ui_MainWindow(object):
     def __init__(self):
@@ -42,7 +52,7 @@ class Ui_MainWindow(object):
         self.lcdNumber.setGeometry(QtCore.QRect(690, 0, 311, 131))
         self.worker.update_progress.connect(self.find_current_timer)
         
-        self.lcdNumber.display("30:00")
+        self.lcdNumber.display(str(TIMER))
         # self.lcdNumber.setProperty("value", 3000.0)
         self.lcdNumber.setObjectName("lcdNumber")
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -195,7 +205,7 @@ class Ui_MainWindow(object):
         
 class WorkerThread(QThread):
     update_progress = pyqtSignal(int)
-    minute = 30
+    minute = int(TIMER)
     t = minute *60
     def run(self):
         while self.t:
@@ -205,6 +215,9 @@ class WorkerThread(QThread):
             time.sleep(1)
             self.t -= 1
             self.update_progress.emit(self.t)
+            if self.t == 0:
+                playsound('audio.mp3')# TODO change this to a good audio file
+
         
 
 
