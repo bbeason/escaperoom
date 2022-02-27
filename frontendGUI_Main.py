@@ -16,40 +16,20 @@ import time
 from suspectwindow import Ui_SuspectWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLCDNumber
-from PyQt5.QtCore import QObject, QTime, QTimer
-from datetime import datetime
-
-
-
-PORT = 5050
-SERVER = "localhost"
-ADDR = (SERVER, PORT)
-FORMAT = "utf-8"
-DISCONNECT_MESSAGE = "!DISCONNECT"
-
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(ADDR)
-
-clients = set()
-clients_lock = threading.Lock()
-
+from PyQt5.QtCore import QObject, QTime, QTimer, QThread, pyqtSignal
+import datetime
 
 class Ui_MainWindow(object):
     def __init__(self):
         super(Ui_MainWindow, self).__init__()
         self.count = 1
-        # create timerß
-        self.timer=QTimer()
-        self.minute = 0
+ 
+        self.worker = WorkerThread()
+        self.worker.start()
+        # self.worker.finished.connect(self.event_timer_finished())
         
-        self.formatted_time = 30
-        
-
-    def check_timer(self):
-        while self.minute < 30:
-            time.sleep(5)
-            self.minute +=1
-            self.formatted_time == 30 - self.minute
+    def event_timer_finished(self):
+        pass
 
 
     def setupUi(self, MainWindow):
@@ -60,7 +40,9 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.lcdNumber = QtWidgets.QLCDNumber(self.centralwidget)
         self.lcdNumber.setGeometry(QtCore.QRect(690, 0, 311, 131))
-        self.lcdNumber.display(self.formatted_time)
+        self.worker.update_progress.connect(self.find_current_timer)
+        
+        self.lcdNumber.display("30:00")
         # self.lcdNumber.setProperty("value", 3000.0)
         self.lcdNumber.setObjectName("lcdNumber")
         self.label = QtWidgets.QLabel(self.centralwidget)
@@ -142,6 +124,10 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
+    def find_current_timer(self, val):
+        print(val)
+        x = time.strftime('%M:%S', time.gmtime(val))
+        self.lcdNumber.display(x)
 
 
 
@@ -207,7 +193,19 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "See Suspects-Identify"))
         self.pushButton_3.setText(_translate("MainWindow", "Need Clue"))
         
-
+class WorkerThread(QThread):
+    update_progress = pyqtSignal(int)
+    minute = 30
+    t = minute *60
+    def run(self):
+        while self.t:
+            mins, secs = divmod(self.t, 60)
+            timer_time = '{:02d}:{:02d}'.format(mins, secs)
+            print(timer_time, end="\r")
+            time.sleep(1)
+            self.t -= 1
+            self.update_progress.emit(self.t)
+        
 
 
 if __name__ == "__main__":
@@ -216,8 +214,6 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    
     MainWindow.show()
-    
     sys.exit(app.exec_())
 
